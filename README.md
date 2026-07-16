@@ -44,20 +44,41 @@ Unlike traditional phishing detectors, LinkSus enhances user trust by providing:
 # 🏗️ System Architecture
 
 ```
-                User
-                  │
-                  ▼
-        Flask Web Application
-                  │
-        ┌─────────┴─────────┐
-        │                   │
-        ▼                   ▼
-Machine Learning      Gemini AI
-Prediction Model      Explanation
-        │                   │
-        └─────────┬─────────┘
-                  ▼
-        Final Detection Result
+            +----------------+
+            |     User       |
+            +-------+--------+
+                    |
+                Enter URL /
+                Scan QR Code
+                    |
+                    v
+          +----------------------+
+          |   Flask Web App      |
+          +----------+-----------+
+                     |
+        URL Cleaning & Preprocessing
+                     |
+                     v
+        Feature Extraction Module
+    (TF-IDF + 19 URL Features)
+                     |
+                     v
+      LinearSVC ML Model
+                     |
+         +-----------+-----------+
+         |                       |
+         v                       v
+ SHAP Explanation         Gemini AI Explanation
+         |                       |
+         +-----------+-----------+
+                     |
+                     v
+        Safe / Phishing Prediction
+                     |
+                     v
+                  User
+                  
+  The user enters a URL or scans a QR code. The Flask backend preprocesses the URL and extracts TF-IDF and handcrafted features. These features are passed to the LinearSVC model, which classifies the URL as Safe or Phishing. SHAP explains the important features influencing the prediction, Gemini AI converts them into a human-readable explanation, and finally the result is displayed to the user.
 ```
 
 ---
